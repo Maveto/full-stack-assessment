@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "orders")
@@ -21,15 +22,14 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     private String status; // e.g., "Pending", "Shipped", "Delivered", etc.
-
     private double totalAmount;
-
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull(message = "User cannot be null")
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -40,10 +40,8 @@ public class Order {
     }
 
     // User constructor with parameters
-    public Order(String status, double totalAmount, LocalDateTime createdAt, User user, List<OrderItem> items) {
+    public Order(String status, User user, List<OrderItem> items) {
         this.status = status;
-        this.totalAmount = totalAmount;
-        this.createdAt = createdAt;
         this.user = user;
         this.items = items;
     }
@@ -51,10 +49,6 @@ public class Order {
     // Getters and Setters
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getStatus() {

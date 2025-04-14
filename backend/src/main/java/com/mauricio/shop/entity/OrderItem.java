@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "order_items")
@@ -18,15 +19,16 @@ public class OrderItem {
     private Long id;
 
     private int quantity;
-
     private double price;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
+    @NotNull(message = "Order cannot be null")
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
+    @NotNull(message = "Product cannot be null")
     private Product product;
 
     // User Empty constructor
@@ -44,10 +46,6 @@ public class OrderItem {
     // Getters and Setters
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public int getQuantity() {

@@ -1,6 +1,7 @@
 package com.mauricio.shop.document;
 
 import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,8 +20,7 @@ public class Cart {
     }
 
     // User constructor with parameters
-    public Cart(String id, Long userId, List<CartItem> items) {
-        this.id = id;
+    public Cart(Long userId, List<CartItem> items) {
         this.userId = userId;
         this.items = items;
     }
@@ -28,10 +28,6 @@ public class Cart {
     // Getters and Setters
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public Long getUserId() {

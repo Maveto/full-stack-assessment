@@ -1,5 +1,6 @@
 package com.mauricio.shop.service.document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class ProductReviewService {
 
     //CREATE
     public ProductReview createProductReview(ProductReview productReview) {
+        productReview.setCreatedDate(LocalDateTime.now());
         return productReviewRepository.save(productReview);
     }
 
@@ -51,6 +53,9 @@ public class ProductReviewService {
 
     //DELETE
     public void deleteProductReview(String id) {
+        if (!productReviewRepository.existsById(id)) {
+            throw new RuntimeException("Product review with id " + id + " does not exist.");
+        }
         productReviewRepository.deleteById(id);
     }
 }

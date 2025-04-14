@@ -1,6 +1,7 @@
 package com.mauricio.shop.document;
 
 import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,22 +23,16 @@ public class ProductReview {
     }
 
     // User constructor with parameters
-    public ProductReview(String id, int rate, String comment, Long userId, Long productId, LocalDateTime createdDate) {
-        this.id = id;
+    public ProductReview(int rate, String comment, Long userId, Long productId) {
         this.rate = rate;
         this.comment = comment;
         this.userId = userId;
         this.productId = productId;
-        this.createdDate = createdDate;
     }
 
     // Getters and Setters
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public int getRate() {

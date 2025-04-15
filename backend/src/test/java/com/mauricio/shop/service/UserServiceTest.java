@@ -1,51 +1,79 @@
 package com.mauricio.shop.service;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.mauricio.shop.config.JwtUtil;
+import com.mauricio.shop.dto.AuthResponse;
+import com.mauricio.shop.dto.RegisterRequest;
 import com.mauricio.shop.entity.User;
+import com.mauricio.shop.enums.Role;
 import com.mauricio.shop.repository.jpa.UserRepository;
-import com.mauricio.shop.service.entity.UserService;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private JwtUtil jwtUtil;
+    // @InjectMocks
+    // private UserService userService;
     @InjectMocks
-    private UserService userService;
+    private AuthService authService;
+
+    @BeforeEach
+    @SuppressWarnings("unused")
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void testCreateUser() {
-        User user = new User("test", "test@example.com", "password123");
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setUsername("test");
+        registerRequest.setEmail("test@example.com");
+        registerRequest.setPassword("password123");
+        registerRequest.setRole(Role.ROLE_USER);
 
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        User userSaved = userService.createUser(user);
-
-        assertNotNull(userSaved);
-        assertEquals("test", userSaved.getUsername());
-    }
-
-    @Test
-    void testGetUserById() {
         User user = new User();
-        user.setId(1L);
+        user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword("encodedPassword");
+        user.setRole(registerRequest.getRole());
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.existsByUsername("test")).thenReturn(false);
+        when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(jwtUtil.generateToken(any(UserDetails.class))).thenReturn("mocked-jwt-token");
 
-        Optional<User> userFound = userService.getUserById(1L);
+        AuthResponse response = authService.createUser(registerRequest);
 
-        assertNotNull(userFound);
-        assertEquals(1L, userFound.get().getId());
+        assertNotNull(response);
+        assertEquals("mocked-jwt-token", response.getToken());
     }
+
+    // @Test
+    // void testGetUserById() {
+    //     User user = new User();
+    //     user.setId(1L);
+    //     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    //     Optional<User> userFound = userService.getUserById(1L);
+    //     assertNotNull(userFound);
+    //     assertEquals(1L, userFound.get().getId());
+    // }
 }

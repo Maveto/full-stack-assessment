@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mauricio.shop.dto.AuthRequest;
-import com.mauricio.shop.dto.AuthResponse;
-import com.mauricio.shop.dto.RegisterRequest;
+import com.mauricio.shop.dto.auth.AuthRequest;
+import com.mauricio.shop.dto.auth.AuthResponse;
+import com.mauricio.shop.dto.auth.RegisterRequest;
 import com.mauricio.shop.service.AuthService;
 
 @RestController

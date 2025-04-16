@@ -1,4 +1,4 @@
-package com.mauricio.shop.dto;
+package com.mauricio.shop.dto.auth;
 
 import com.mauricio.shop.enums.Role;
 
@@ -8,6 +8,9 @@ public class RegisterRequest {
     private String email;
     private String password;
     private Role role;
+
+    public RegisterRequest() {
+    }
 
     public String getUsername() {
         return username;

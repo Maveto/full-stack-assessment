@@ -5,6 +5,10 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+
 @Document(collection = "product_reviews")
 public class ProductReview {
 
@@ -12,10 +16,20 @@ public class ProductReview {
     @Id
     private String id;
 
+    @Column(nullable = false)
+    @Min(1)
+    @Max(5)
     private int rate; // 1 to 5
+
     private String comment;
+
+    @Column(nullable = false)
     private Long userId;
+
+    @Column(nullable = false)
     private Long productId;
+
+    @Column(nullable = false)
     private LocalDateTime createdDate;
 
     // User Empty constructor

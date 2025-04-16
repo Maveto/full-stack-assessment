@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.mauricio.shop.dto.product.ProductRequest;
+import com.mauricio.shop.dto.product.ProductResponse;
 import com.mauricio.shop.entity.Product;
 import com.mauricio.shop.repository.jpa.ProductRepository;
 import com.mauricio.shop.service.entity.ProductService;
@@ -28,7 +30,14 @@ class ProductServiceTest {
 
         when(productRepository.save(any(Product.class))).thenReturn(product);
 
-        Product productSaved = productService.createProduct(product);
+        ProductRequest productRequest = new ProductRequest();
+        productRequest.setName("shirt");
+        productRequest.setDescription("A nice shirt");
+        productRequest.setPrice(19.99);
+        productRequest.setStockQuantity(100);
+        productRequest.setImageUrl("");
+
+        ProductResponse productSaved = productService.createProduct(productRequest);
 
         assertNotNull(productSaved);
         assertEquals("shirt", productSaved.getName());

@@ -12,4 +12,6 @@ public interface ProductReviewRepository extends MongoRepository<ProductReview, 
 
     public List<ProductReview> findByProductId(Long porductId);
 
+    public List<ProductReview> findByUserId(Long userId);
+
 }

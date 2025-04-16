@@ -1,6 +1,5 @@
 package com.mauricio.shop.service;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +11,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mauricio.shop.config.JwtUtil;
-import com.mauricio.shop.dto.AuthRequest;
-import com.mauricio.shop.dto.AuthResponse;
-import com.mauricio.shop.dto.RegisterRequest;
+import com.mauricio.shop.dto.auth.AuthRequest;
+import com.mauricio.shop.dto.auth.AuthResponse;
+import com.mauricio.shop.dto.auth.RegisterRequest;
 import com.mauricio.shop.entity.User;
-import com.mauricio.shop.enums.Role;
 import com.mauricio.shop.repository.jpa.UserRepository;
+import static com.mauricio.shop.validator.ValidatorUtils.isNullOrEmpty;
+import static com.mauricio.shop.validator.ValidatorUtils.isValidEmail;
+import static com.mauricio.shop.validator.ValidatorUtils.isValidRole;
 
 @Service
 public class AuthService {
@@ -109,18 +110,5 @@ public class AuthService {
         // Generate a JWT token for the user
         var token = jwtUtil.generateToken(userDetails);
         return new AuthResponse(token);
-    }
-
-    // Helper methods to validate input
-    private boolean isNullOrEmpty(String str) {
-        return str == null || str.trim().isEmpty();
-    }
-
-    private boolean isValidEmail(String email) {
-        return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
-    }
-
-    private boolean isValidRole(Role role) {
-        return role != null && Arrays.asList(Role.values()).contains(role);
     }
 }

@@ -1,4 +1,4 @@
-package com.mauricio.shop.dto;
+package com.mauricio.shop.dto.auth;
 
 public class AuthResponse {
 

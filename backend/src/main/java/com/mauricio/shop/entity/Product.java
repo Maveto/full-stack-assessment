@@ -1,10 +1,13 @@
 package com.mauricio.shop.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "products")
@@ -15,10 +18,22 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    @NotBlank
     private String name;
+
+    @Column(nullable = false)
+    @NotBlank
     private String description;
+
+    @Column(nullable = false)
+    @Min(0)
     private double price;
+
+    @Column(nullable = false)
+    @Min(0)
     private int stockQuantity;
+
     private String imageUrl;
 
     // User Empty constructor

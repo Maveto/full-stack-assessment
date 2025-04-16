@@ -15,8 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.mauricio.shop.config.JwtUtil;
-import com.mauricio.shop.dto.AuthResponse;
-import com.mauricio.shop.dto.RegisterRequest;
+import com.mauricio.shop.dto.auth.AuthResponse;
+import com.mauricio.shop.dto.auth.RegisterRequest;
 import com.mauricio.shop.entity.User;
 import com.mauricio.shop.enums.Role;
 import com.mauricio.shop.repository.jpa.UserRepository;

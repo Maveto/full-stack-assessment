@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f3fafc;
+  --foreground: #091a20;
+  --primary: #1e5367;
+  --secondary: #7d80d9;
+  --accent: #4e39c6;
+}
+
+.dark {
+  --background: #030a0c;
+  --foreground: #e0f0f6;
+  --primary: #97cde1;
+  --secondary: #252881;
+  --accent: #513bc6;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

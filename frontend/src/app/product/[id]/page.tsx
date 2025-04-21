@@ -2,6 +2,7 @@ import { fetchProductById, fetchReviewsByProductId } from "@/lib/api";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { FaShoppingCart } from "react-icons/fa";
+import ReviewsList from "@/components/ReviewsList";
 
 type ProductPageProps = {
   params: {
@@ -78,32 +79,7 @@ export default async function ProductInfo({ params }: ProductPageProps) {
       </div>
 
       {/* Reviews */}
-      <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl text-black font-bold mb-4">User Reviews</h2>
-        {reviews.length === 0 ? (
-          <p className="text-black">No reviews yet.</p>
-        ) : (
-          <ul className="space-y-4 text-black">
-            {reviews.map((review: any) => (
-              <li key={review.id} className="border-b pb-4">
-                <div className="flex justify-between items-center">
-                  <p className="font-semibold text-secondary">
-                    User #{review.userId}
-                  </p>
-                  <span className="text-sm italic">
-                    {new Date(review.createdDate).toLocaleDateString()}
-                  </span>
-                </div>
-                <p className="text-yellow-500 font-medium">
-                  {review.rate}/5 {"★".repeat(review.rate)}
-                  {"☆".repeat(5 - review.rate)}
-                </p>
-                <p>{review.comment}</p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <ReviewsList reviews={reviews} productId={product.id} />
     </div>
   );
 }

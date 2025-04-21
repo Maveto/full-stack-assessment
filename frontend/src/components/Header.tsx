@@ -53,7 +53,7 @@ export default function Header() {
 
   return (
     <header className="w-full bg-secondary text-white shadow-md">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-row justify-between items-center gap-4 sm:gap-0">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 hover:opacity-90">
             <FaviconImage size={32} />
@@ -74,14 +74,6 @@ export default function Header() {
             <Navbar links={userActionLinks} rounded="full" primary={false} />
           )
         ) : null}
-
-        {/* Main Navigation
-        {isInitialized && user && (
-          <Navbar links={linksUserNav} primary={false} />
-        )}
-
-        Login/Signup o Logout
-        {isInitialized && <Navbar links={userActionLinks} rounded="full" />} */}
       </nav>
     </header>
   );

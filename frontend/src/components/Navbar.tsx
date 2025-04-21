@@ -28,7 +28,7 @@ export default function Navbar({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathName = usePathname();
 
-  const baseClasses = `p-3 rounded-${rounded} flex items-center gap-2 transition`;
+  const baseClasses = `p-3 rounded-${rounded} flex items-center gap-2 transition duration-300 ease-in-out hover:scale-105`;
   const primaryClasses = `bg-primary hover:bg-accent text-background`;
   const secondaryClasses = `bg-secondary hover:bg-accent text-foreground`;
   const combinedClasses = (isPrimary: boolean) =>

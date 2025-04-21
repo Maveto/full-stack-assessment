@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import api from "./axios";
+import { Review } from "@/components/ReviewsList";
 
 export async function signUpUser(data: {
   username: string;
@@ -86,14 +87,6 @@ export async function fetchProducts() {
     }
     throw new Error("Unexpected error occurred");
   }
-
-  // const res = await fetch(`${API_URL}/products`, {
-  //   next: { revalidate: 60 },
-  // });
-
-  // if (!res.ok) throw new Error("Failed to load products");
-
-  // return res.json();
 }
 
 export async function fetchProductById(id: string) {
@@ -122,6 +115,22 @@ export async function fetchReviewsByProductId(id: string) {
         error.response?.data?.error ||
         error.response?.data?.message ||
         "Fetch reviews by product id failed";
+      throw new Error(message);
+    }
+    throw new Error("Unexpected error occurred");
+  }
+}
+
+export async function postReview(review: Omit<Review, "id" | "createdDate">) {
+  try {
+    const res = await api.post("/reviews", review);
+    return res.data;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Posting review failed";
       throw new Error(message);
     }
     throw new Error("Unexpected error occurred");

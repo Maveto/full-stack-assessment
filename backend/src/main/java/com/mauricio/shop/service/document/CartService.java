@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.mauricio.shop.document.Cart;
@@ -20,11 +24,13 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
+    private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public CartService(CartRepository cartRepository, UserRepository userRepository) {
+    public CartService(CartRepository cartRepository, UserRepository userRepository, MongoTemplate mongoTemplate) {
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     //CREATE
@@ -128,6 +134,12 @@ public class CartService {
 
         CartResponse cartRes = new CartResponse(cart.getId(), cart.getUserId(), cart.getItems());
         return cartRes;
+    }
+
+    public void removeProductFromAllCarts(Long productId) {
+        Query query = new Query(Criteria.where("items.productId").is(productId));
+        Update update = new Update().pull("items", Query.query(Criteria.where("productId").is(productId)));
+        mongoTemplate.updateMulti(query, update, Cart.class);
     }
 
     // Helper methods

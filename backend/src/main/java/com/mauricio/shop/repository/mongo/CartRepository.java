@@ -12,4 +12,6 @@ public interface CartRepository extends MongoRepository<Cart, String> {
 
     public Optional<Cart> findByUserId(Long userId);
 
+    public void deleteAllByUserId(Long id);
+
 }

@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +24,17 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private final boolean secure;
+
+    private final String sameSite;
+
     private final AuthService authService;
 
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, @Value("${jwt.cookie.secure:true}") boolean secure,
+            @Value("${jwt.cookie.samesite:Lax}") String sameSite) {
+        this.secure = secure;
+        this.sameSite = sameSite;
         this.authService = authService;
     }
 
@@ -38,10 +46,10 @@ public class AuthController {
 
             ResponseCookie cookie = ResponseCookie.from("token", token)
                     .httpOnly(true)
-                    .secure(false) //<---- Change in prod to true
+                    .secure(secure) //<---- Change in prod to true
                     .path("/")
                     .maxAge(Duration.ofDays(7))
-                    .sameSite("Lax") //<---"None" if frontend and backend are in different domains
+                    .sameSite(sameSite) //<---"None" if frontend and backend are in different domains
                     .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -62,10 +70,10 @@ public class AuthController {
 
             ResponseCookie cookie = ResponseCookie.from("token", token)
                     .httpOnly(true)
-                    .secure(false)
+                    .secure(secure)
                     .path("/")
                     .maxAge(Duration.ofDays(7))
-                    .sameSite("Lax")
+                    .sameSite(sameSite)
                     .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -82,10 +90,10 @@ public class AuthController {
     public ResponseEntity<?> logout(HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from("token", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(secure)
                 .path("/")
                 .maxAge(0)
-                .sameSite("Lax")
+                .sameSite(sameSite)
                 .build();
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("Logged out successfuly!");

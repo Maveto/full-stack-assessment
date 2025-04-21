@@ -14,4 +14,8 @@ public interface ProductReviewRepository extends MongoRepository<ProductReview, 
 
     public List<ProductReview> findByUserId(Long userId);
 
+    public void deleteAllByUserId(Long id);
+
+    public void deleteAllByProductId(Long id);
+
 }

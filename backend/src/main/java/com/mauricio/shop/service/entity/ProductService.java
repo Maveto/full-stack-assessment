@@ -10,16 +10,22 @@ import com.mauricio.shop.dto.product.ProductRequest;
 import com.mauricio.shop.dto.product.ProductResponse;
 import com.mauricio.shop.entity.Product;
 import com.mauricio.shop.repository.jpa.ProductRepository;
+import com.mauricio.shop.repository.mongo.ProductReviewRepository;
+import com.mauricio.shop.service.document.CartService;
 import static com.mauricio.shop.validator.ValidatorUtils.isNullOrEmpty;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductReviewRepository reviewRepository;
+    private final CartService cartService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductReviewRepository reviewRepository, CartService cartService) {
         this.productRepository = productRepository;
+        this.reviewRepository = reviewRepository;
+        this.cartService = cartService;
     }
 
     //CREATE
@@ -181,6 +187,9 @@ public class ProductService {
         if (!productRepository.existsById(id)) {
             throw new RuntimeException("Product not found with id: " + id);
         }
+
         productRepository.deleteById(id);
+        reviewRepository.deleteAllByProductId(id);
+        cartService.removeProductFromAllCarts(id);
     }
 }

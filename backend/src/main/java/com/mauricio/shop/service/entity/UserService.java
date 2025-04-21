@@ -11,6 +11,8 @@ import com.mauricio.shop.dto.user.UpdateUserRequest;
 import com.mauricio.shop.dto.user.UserResponse;
 import com.mauricio.shop.entity.User;
 import com.mauricio.shop.repository.jpa.UserRepository;
+import com.mauricio.shop.repository.mongo.CartRepository;
+import com.mauricio.shop.repository.mongo.ProductReviewRepository;
 import static com.mauricio.shop.validator.ValidatorUtils.isNullOrEmpty;
 import static com.mauricio.shop.validator.ValidatorUtils.isValidEmail;
 
@@ -18,11 +20,15 @@ import static com.mauricio.shop.validator.ValidatorUtils.isValidEmail;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
+    private final ProductReviewRepository reviewRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, CartRepository cartRepository, ProductReviewRepository reviewRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.cartRepository = cartRepository;
+        this.reviewRepository = reviewRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -121,6 +127,10 @@ public class UserService {
     public void deleteUserByUsername(String username) {
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+
+        cartRepository.deleteAllByUserId(user.getId());
+        reviewRepository.deleteAllByUserId(user.getId());
+
         userRepository.delete(user);
     }
 
@@ -128,6 +138,10 @@ public class UserService {
         if (!userRepository.existsById((id))) {
             throw new RuntimeException("User not found with id: " + id);
         }
+
+        cartRepository.deleteAllByUserId(id);
+        reviewRepository.deleteAllByUserId(id);
+
         userRepository.deleteById(id);
     }
 }

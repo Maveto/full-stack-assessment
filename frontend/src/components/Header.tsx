@@ -1,57 +1,87 @@
+"use client";
+
+import Link from "next/link";
 import FaviconImage from "./FaviconImage";
 import Navbar from "./Navbar";
-import Image from "next/image";
-
-const links = [
-  {
-    name: "Home",
-    href: "/",
-    icon: "",
-  },
-  {
-    name: "Sign In",
-    href: "/signin",
-    icon: "",
-  },
-  {
-    name: "Sign Up",
-    href: "/signup",
-    icon: "",
-  },
-];
-
-const userLinks = [
-  {
-    name: "Home",
-    href: "/",
-    icon: "",
-  },
-  {
-    name: "Cart",
-    href: "/cart",
-    icon: "",
-  },
-  {
-    name: "My Reviews",
-    href: "/reviews",
-    icon: "",
-  },
-  {
-    name: "Profile",
-    href: "/profile",
-    icon: "",
-  },
-];
+import { useAuth } from "@/hooks/useAuth";
+import { logout } from "@/lib/api";
+import {
+  FaShoppingCart,
+  FaSignInAlt,
+  FaSignOutAlt,
+  FaUser,
+  FaUserPlus,
+} from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { MdOutlineReviews } from "react-icons/md";
+import { RiDashboardLine, RiShoppingBagLine } from "react-icons/ri";
 
 export default function Header() {
+  const { user, isInitialized, logout: logoutSlice, isAdmin } = useAuth();
+  const router = useRouter();
+
+  const handleLogOut = async () => {
+    try {
+      await logout();
+      logoutSlice();
+      router.push("/");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
+  const linksGuest = [
+    { name: "Log In", href: "/login", icon: FaSignInAlt },
+    { name: "Sign Up", href: "/signup", icon: FaUserPlus },
+  ];
+
+  const linksUserNav = [
+    { name: "Products", href: "/", icon: RiShoppingBagLine },
+    { name: "Cart", href: "/cart", icon: FaShoppingCart },
+    // { name: "My Reviews", href: "/reviews", icon: MdOutlineReviews },
+    { name: "Profile", href: "/profile", icon: FaUser },
+    { name: "Log Out", onClick: handleLogOut, icon: FaSignOutAlt },
+  ];
+
+  const linksAdminNav = [
+    { name: "Products", href: "/", icon: RiShoppingBagLine },
+    { name: "Admin Panel", href: "/admin", icon: RiDashboardLine },
+    { name: "Log Out", onClick: handleLogOut, icon: FaSignOutAlt },
+  ];
+
+  const userActionLinks = user ? linksUserNav : linksGuest;
+
   return (
-    <header className="w-full bg-secondary shadow">
-      <nav className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="flex gap-3 items-center">
-          <FaviconImage size={32} />
-          <div className="text-xl font-bold">Mauri Shop</div>
+    <header className="w-full bg-secondary text-white shadow-md">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-90">
+            <FaviconImage size={32} />
+            <span className="text-2xl font-bold tracking-tight text-white">
+              Mauri Shop
+            </span>
+          </Link>
         </div>
-        <Navbar links={links} />
+
+        {isInitialized ? (
+          user ? (
+            isAdmin ? (
+              <Navbar links={linksAdminNav} primary={false} />
+            ) : (
+              <Navbar links={linksUserNav} primary={false} />
+            )
+          ) : (
+            <Navbar links={userActionLinks} rounded="full" primary={false} />
+          )
+        ) : null}
+
+        {/* Main Navigation
+        {isInitialized && user && (
+          <Navbar links={linksUserNav} primary={false} />
+        )}
+
+        Login/Signup o Logout
+        {isInitialized && <Navbar links={userActionLinks} rounded="full" />} */}
       </nav>
     </header>
   );

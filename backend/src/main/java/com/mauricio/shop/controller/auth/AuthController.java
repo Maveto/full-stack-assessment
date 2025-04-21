@@ -1,8 +1,11 @@
 package com.mauricio.shop.controller.auth;
 
+import java.time.Duration;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +16,8 @@ import com.mauricio.shop.dto.auth.AuthRequest;
 import com.mauricio.shop.dto.auth.AuthResponse;
 import com.mauricio.shop.dto.auth.RegisterRequest;
 import com.mauricio.shop.service.AuthService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,32 +31,63 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request, HttpServletResponse response) {
         try {
-            AuthResponse response = authService.createUser(request);
-            Map<String, String> responseMap = Map.of("token", response.getToken());
-            return ResponseEntity.ok(responseMap);
+            AuthResponse authResponse = authService.createUser(request);
+            String token = authResponse.getToken();
+
+            ResponseCookie cookie = ResponseCookie.from("token", token)
+                    .httpOnly(true)
+                    .secure(false) //<---- Change in prod to true
+                    .path("/")
+                    .maxAge(Duration.ofDays(7))
+                    .sameSite("Lax") //<---"None" if frontend and backend are in different domains
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+            return ResponseEntity.ok(Map.of("message", "User successfully registered"));
         } catch (RuntimeException e) {
-            Map<String, String> responseMap = Map.of("error", e.getMessage());
-            return ResponseEntity.badRequest().body(responseMap);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            Map<String, String> responseMap = Map.of("error", "An unexpected error occurred");
-            return ResponseEntity.status(500).body(responseMap);
+            return ResponseEntity.status(500).body("An unexpected error occurred");
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest request, HttpServletResponse response) {
         try {
-            AuthResponse response = authService.login(request);
-            Map<String, String> responseMap = Map.of("token", response.getToken());
-            return ResponseEntity.ok(responseMap);
+            AuthResponse authResponse = authService.login(request);
+            String token = authResponse.getToken();
+
+            ResponseCookie cookie = ResponseCookie.from("token", token)
+                    .httpOnly(true)
+                    .secure(false)
+                    .path("/")
+                    .maxAge(Duration.ofDays(7))
+                    .sameSite("Lax")
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+            return ResponseEntity.ok(Map.of("message", "User successfully logged in"));
         } catch (RuntimeException e) {
-            Map<String, String> responseMap = Map.of("error", e.getMessage());
-            return ResponseEntity.badRequest().body(responseMap);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            Map<String, String> responseMap = Map.of("error", "An unexpected error occurred");
-            return ResponseEntity.status(500).body(responseMap);
+            return ResponseEntity.status(500).body("An unexpected error occurred");
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("Logged out successfuly!");
     }
 }

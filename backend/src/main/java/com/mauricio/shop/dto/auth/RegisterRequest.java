@@ -1,13 +1,10 @@
 package com.mauricio.shop.dto.auth;
 
-import com.mauricio.shop.enums.Role;
-
 public class RegisterRequest {
 
     private String username;
     private String email;
     private String password;
-    private Role role;
 
     public RegisterRequest() {
     }
@@ -34,13 +31,5 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 }

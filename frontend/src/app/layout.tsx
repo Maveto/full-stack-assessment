@@ -1,10 +1,11 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "../context/ThemeProvider";
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Favicon from "@/components/Favicon";
+import Providers from "./Providers";
+import UserInitializer from "@/components/UserInitializer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,12 +23,13 @@ export default function RootLayout({
         <link rel="icon" href="/favicon-light.ico" />
       </head>
       <body className={inter.className}>
-        <ThemeProvider>
+        <Providers>
+          <UserInitializer />
           <Favicon />
           <Header />
           <main className="min-h-screen px-4 sm:px-8 py-8">{children}</main>
           <Footer />
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

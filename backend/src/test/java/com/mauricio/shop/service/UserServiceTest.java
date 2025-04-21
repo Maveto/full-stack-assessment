@@ -47,13 +47,12 @@ class UserServiceTest {
         registerRequest.setUsername("test");
         registerRequest.setEmail("test@example.com");
         registerRequest.setPassword("password123");
-        registerRequest.setRole(Role.ROLE_USER);
 
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword("encodedPassword");
-        user.setRole(registerRequest.getRole());
+        user.setRole(Role.ROLE_USER);
 
         when(userRepository.existsByUsername("test")).thenReturn(false);
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);

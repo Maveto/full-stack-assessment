@@ -15,10 +15,10 @@ import com.mauricio.shop.dto.auth.AuthRequest;
 import com.mauricio.shop.dto.auth.AuthResponse;
 import com.mauricio.shop.dto.auth.RegisterRequest;
 import com.mauricio.shop.entity.User;
+import com.mauricio.shop.enums.Role;
 import com.mauricio.shop.repository.jpa.UserRepository;
 import static com.mauricio.shop.validator.ValidatorUtils.isNullOrEmpty;
 import static com.mauricio.shop.validator.ValidatorUtils.isValidEmail;
-import static com.mauricio.shop.validator.ValidatorUtils.isValidRole;
 
 @Service
 public class AuthService {
@@ -47,11 +47,6 @@ public class AuthService {
             throw new RuntimeException("Password cannot be empty!");
         }
 
-        // Check if role is valid
-        if (!isValidRole(request.getRole())) {
-            throw new RuntimeException("Invalid role!");
-        }
-
         // Check if email is invalid
         if (!isValidEmail(request.getEmail())) {
             throw new RuntimeException("Invalid email format!");
@@ -72,7 +67,7 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
+        user.setRole(Role.ROLE_USER);
 
         // Save the user to the database
         userRepository.save(user);

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { signUpUser } from "@/lib/api";
 import InputField from "@/components/InputField";
 import Tooltip from "@/components/Tooltip";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,11 +61,13 @@ export default function SignUpPage() {
     }
 
     try {
-      await signUpUser({
+      const newUser = {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-      });
+      };
+      await signUpUser(newUser);
+      login(newUser);
       router.push("/");
     } catch (err: any) {
       setError(err.message);

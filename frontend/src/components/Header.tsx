@@ -31,6 +31,7 @@ export default function Header() {
   };
 
   const linksGuest = [
+    { name: "Products", href: "/", icon: RiShoppingBagLine },
     { name: "Log In", href: "/login", icon: FaSignInAlt },
     { name: "Sign Up", href: "/signup", icon: FaUserPlus },
   ];
@@ -46,6 +47,7 @@ export default function Header() {
   const linksAdminNav = [
     { name: "Products", href: "/", icon: RiShoppingBagLine },
     { name: "Admin Panel", href: "/admin", icon: RiDashboardLine },
+    { name: "Profile", href: "/profile", icon: FaUser },
     { name: "Log Out", onClick: handleLogOut, icon: FaSignOutAlt },
   ];
 

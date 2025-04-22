@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaEye, FaShoppingCart } from "react-icons/fa";
 import ThemedButton from "./ThemedButton";
+import { addItemToCart } from "@/lib/api";
+import { useState } from "react";
 
-type Product = {
+export type Product = {
   id: number;
   name: string;
   description: string;
@@ -19,6 +21,14 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const [showFeedback, setShowFeedback] = useState(false);
+
+  const handleAddToCart = async () => {
+    await addItemToCart({ productId: product.id, quantity: 1 });
+    setShowFeedback(true);
+    setTimeout(() => setShowFeedback(false), 3000);
+  };
+
   return (
     <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <Link href={`/product/${product.id}`}>
@@ -70,6 +80,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             isPrimary
             isDisabled={product.stockQuantity === 0}
             fullWidth
+            onClick={handleAddToCart}
           />
 
           <ThemedButton
@@ -81,6 +92,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           />
         </div>
       </div>
+
+      {showFeedback && (
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-800 text-white text-sm px-4 py-2 rounded shadow-lg animate-fadeInOut">
+          Product added to your Shopping Cart 🛒
+        </div>
+      )}
     </div>
   );
 }

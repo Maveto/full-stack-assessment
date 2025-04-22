@@ -2,15 +2,13 @@ package com.mauricio.shop.dto.cart;
 
 import java.util.List;
 
-import com.mauricio.shop.document.CartItem;
-
 public class CartResponse {
 
     private final String id;
     private final Long userId;
-    private final List<CartItem> items;
+    private final List<EnrichedCartItemResponse> items;
 
-    public CartResponse(String id, Long userId, List<CartItem> items) {
+    public CartResponse(String id, Long userId, List<EnrichedCartItemResponse> items) {
         this.id = id;
         this.userId = userId;
         this.items = items;
@@ -24,7 +22,7 @@ public class CartResponse {
         return userId;
     }
 
-    public List<CartItem> getItems() {
+    public List<EnrichedCartItemResponse> getItems() {
         return items;
     }
 }

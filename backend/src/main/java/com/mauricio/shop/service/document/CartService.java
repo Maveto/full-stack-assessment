@@ -15,7 +15,9 @@ import com.mauricio.shop.document.Cart;
 import com.mauricio.shop.document.CartItem;
 import com.mauricio.shop.dto.cart.CartRequest;
 import com.mauricio.shop.dto.cart.CartResponse;
+import com.mauricio.shop.dto.cart.EnrichedCartItemResponse;
 import com.mauricio.shop.entity.User;
+import com.mauricio.shop.repository.jpa.ProductRepository;
 import com.mauricio.shop.repository.jpa.UserRepository;
 import com.mauricio.shop.repository.mongo.CartRepository;
 
@@ -25,12 +27,15 @@ public class CartService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final MongoTemplate mongoTemplate;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public CartService(CartRepository cartRepository, UserRepository userRepository, MongoTemplate mongoTemplate) {
+    public CartService(CartRepository cartRepository, UserRepository userRepository,
+            MongoTemplate mongoTemplate, ProductRepository productRepository) {
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
         this.mongoTemplate = mongoTemplate;
+        this.productRepository = productRepository;
     }
 
     //CREATE
@@ -62,7 +67,7 @@ public class CartService {
         cart.setItems(items);
         cartRepository.save(cart);
 
-        CartResponse cartRes = new CartResponse(cart.getId(), cart.getUserId(), cart.getItems());
+        CartResponse cartRes = new CartResponse(cart.getId(), cart.getUserId(), enrichItems(cart.getItems()));
         return cartRes;
     }
 
@@ -75,7 +80,8 @@ public class CartService {
                         Cart newCart = new Cart(userId, new ArrayList<>());
                         return cartRepository.save(newCart);
                     });
-            CartResponse cartResponse = new CartResponse(cart.getId(), cart.getUserId(), cart.getItems());
+
+            CartResponse cartResponse = new CartResponse(cart.getId(), cart.getUserId(), enrichItems(cart.getItems()));
             return cartResponse;
         } catch (RuntimeException e) {
             throw new RuntimeException("User not found: " + username, e);
@@ -115,7 +121,7 @@ public class CartService {
         cart.setItems(items);
         cartRepository.save(cart);
 
-        CartResponse cartRes = new CartResponse(cart.getId(), cart.getUserId(), cart.getItems());
+        CartResponse cartRes = new CartResponse(cart.getId(), cart.getUserId(), enrichItems(cart.getItems()));
         return cartRes;
     }
 
@@ -132,7 +138,7 @@ public class CartService {
         cart.setItems(updatedItems);
         cartRepository.save(cart);
 
-        CartResponse cartRes = new CartResponse(cart.getId(), cart.getUserId(), cart.getItems());
+        CartResponse cartRes = new CartResponse(cart.getId(), cart.getUserId(), enrichItems(cart.getItems()));
         return cartRes;
     }
 
@@ -146,5 +152,21 @@ public class CartService {
     public Long getUserIdByUsername(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
         return user.getId();
+    }
+
+    private List<EnrichedCartItemResponse> enrichItems(List<CartItem> items) {
+        return items.stream()
+                .map(item -> productRepository.findById(item.getProductId())
+                .map(product -> {
+                    EnrichedCartItemResponse enriched = new EnrichedCartItemResponse();
+                    enriched.setProductId(product.getId());
+                    enriched.setName(product.getName());
+                    enriched.setPrice(product.getPrice());
+                    enriched.setImageUrl(product.getImageUrl());
+                    enriched.setQuantity(item.getQuantity());
+                    return enriched;
+                }).orElse(null))
+                .filter(item -> item != null)
+                .toList();
     }
 }

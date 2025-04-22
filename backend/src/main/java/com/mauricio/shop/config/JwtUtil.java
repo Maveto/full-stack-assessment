@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -50,8 +51,14 @@ public class JwtUtil {
     }
 
     // Checks if the token is expired
-    private boolean isTokenExpired(String token) {
-        return extractExpirationDate(token).before(new Date());
+    public boolean isTokenExpired(String token) {
+        try {
+            return extractExpirationDate(token).before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     // Generates a new token from the user details

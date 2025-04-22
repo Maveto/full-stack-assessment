@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import api from "./axios";
 import { Review } from "@/components/ReviewsList";
 
+/////////////////////////// User functions////////////////////////
 export async function signUpUser(data: {
   username: string;
   email: string;
@@ -73,6 +74,7 @@ export async function getCurrentUser() {
   }
 }
 
+/////////////////////////// Product functions////////////////////////
 export async function fetchProducts() {
   try {
     const res = await api.get("/products");
@@ -105,6 +107,7 @@ export async function fetchProductById(id: string) {
   }
 }
 
+/////////////////////////// Reviews functions////////////////////////
 export async function fetchReviewsByProductId(id: string) {
   try {
     const res = await api.get(`/reviews/product/${id}`);
@@ -131,6 +134,78 @@ export async function postReview(review: Omit<Review, "id" | "createdDate">) {
         error.response?.data?.error ||
         error.response?.data?.message ||
         "Posting review failed";
+      throw new Error(message);
+    }
+    throw new Error("Unexpected error occurred");
+  }
+}
+
+/////////////////////////// Cart functions////////////////////////
+export async function getCart() {
+  try {
+    const res = await api.get("/cart");
+    return res.data;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Getting cart failed";
+      throw new Error(message);
+    }
+    throw new Error("Unexpected error occurred");
+  }
+}
+
+export async function addItemToCart(item: {
+  productId: number;
+  quantity: number;
+}) {
+  try {
+    const res = await api.post("/cart", item);
+    return res.data;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Adding item to cart failed";
+      throw new Error(message);
+    }
+    throw new Error("Unexpected error occurred");
+  }
+}
+
+export async function updateCartItem(item: {
+  productId: number;
+  quantity: number;
+}) {
+  try {
+    const res = await api.put("/cart", item);
+    return res.data;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      console.log(error);
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Updating cart item failed";
+      throw new Error(message);
+    }
+    throw new Error("Unexpected error occurred");
+  }
+}
+
+export async function removeItemFromCart(itemId: number) {
+  try {
+    const res = await api.delete(`/cart/${itemId}`);
+    return res.data;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Removing item from cart failed";
       throw new Error(message);
     }
     throw new Error("Unexpected error occurred");

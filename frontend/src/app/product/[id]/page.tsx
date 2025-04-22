@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { FaShoppingCart } from "react-icons/fa";
 import ReviewsList from "@/components/ReviewsList";
+import ProductInfo from "@/components/ProductInfo";
 
 type ProductPageProps = {
   params: {
@@ -10,7 +11,7 @@ type ProductPageProps = {
   };
 };
 
-export default async function ProductInfo({ params }: ProductPageProps) {
+export default async function ProductPage({ params }: ProductPageProps) {
   let product;
   let reviews = [];
 
@@ -43,39 +44,7 @@ export default async function ProductInfo({ params }: ProductPageProps) {
         </div>
 
         {/* Information */}
-        <div className="w-full md:w-1/2 space-y-4">
-          <h1 className="text-3xl text-black font-bold">{product.name}</h1>
-          <p className="text-black">{product.description}</p>
-
-          <div className="text-2xl font-semibold text-green-600">
-            ${product.price.toFixed(2)}
-          </div>
-
-          <div
-            className={`inline-block px-3 py-1 text-sm rounded-full ${
-              product.stockQuantity > 0
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {product.stockQuantity > 0 ? "Available" : "Out of Stock"}
-          </div>
-
-          <div className="pt-4">
-            <button
-              disabled={product.stockQuantity === 0}
-              className={`flex items-center justify-center gap-2 px-5 py-3 rounded transition
-                ${
-                  product.stockQuantity > 0
-                    ? "bg-primary text-background hover:text-white hover:bg-accent"
-                    : "bg-gray-400 text-gray-800 cursor-not-allowed"
-                }`}
-            >
-              <FaShoppingCart />
-              Add to Cart
-            </button>
-          </div>
-        </div>
+        <ProductInfo product={product} />
       </div>
 
       {/* Reviews */}

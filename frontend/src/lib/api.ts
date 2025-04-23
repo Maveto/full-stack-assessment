@@ -107,6 +107,8 @@ export async function fetchProductById(id: string) {
   }
 }
 
+export async function deleteProductById(productId: number) {}
+
 /////////////////////////// Reviews functions////////////////////////
 export async function fetchReviewsByProductId(id: string) {
   try {

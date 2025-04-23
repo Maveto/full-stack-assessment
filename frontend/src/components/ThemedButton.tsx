@@ -1,8 +1,7 @@
 "use client";
 
-import { IconType } from "react-icons";
 import Link from "next/link";
-import { MouseEventHandler } from "react";
+import { IconType } from "react-icons";
 
 type ButtonProps = {
   isPrimary?: boolean;
@@ -12,8 +11,7 @@ type ButtonProps = {
   href?: string;
   onClick?: () => void;
   fullWidth?: boolean;
-  px?: number;
-  py?: number;
+  padding?: "sm" | "md" | "lg";
 };
 
 export default function ThemedButton({
@@ -24,20 +22,28 @@ export default function ThemedButton({
   href,
   onClick,
   fullWidth = false,
-  px = 1,
-  py = 2,
+  padding = "md",
 }: ButtonProps) {
-  const baseClass = `flex items-center justify-center gap-2 py-${py} px-${px} rounded transition-colors disabled:bg-gray-400 disabled:text-gray-800 ${
-    fullWidth ? "w-full" : ""
-  }
-  hover:bg-accent
-  ${isDisabled ? "cursor-not-allowed" : ""}`;
+  const paddingMap = {
+    sm: "px-2 py-1",
+    md: "px-4 py-2",
+    lg: "px-6 py-3",
+  };
+
+  const baseClass = `
+    flex items-center justify-center gap-2 
+    rounded transition-colors 
+    disabled:bg-gray-400 disabled:text-gray-800
+    ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
+    ${paddingMap[padding]}
+    ${fullWidth ? "w-full" : "max-w-fit"}
+  `;
 
   const variantClass = isPrimary
-    ? "bg-primary text-background hover:text-foreground"
-    : "bg-secondary text-foreground ";
+    ? "bg-primary text-background hover:text-foreground hover:bg-accent"
+    : "bg-secondary text-foreground hover:bg-accent";
 
-  const finalClass = `${baseClass} ${variantClass}`;
+  const finalClass = `${baseClass} ${variantClass}`.replace(/\s+/g, " ").trim();
 
   const buttonContent = (
     <>

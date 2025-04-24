@@ -129,7 +129,7 @@ src/
 | ADMIN         | User must have ADMIN role                 |
 
 ## Environment Variables (suggested for production)
-Variables that are needed in the `application.properties` file and should be trated as secrets.
+Variables that are needed in the `application.properties` file and should be treated as secrets.
 
 ### PostgreSQL
 - `spring.datasource.url=${POSTGRESQL_URL}`

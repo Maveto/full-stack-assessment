@@ -29,7 +29,7 @@ The frontend is developed using **React + Next.js** with a responsive layout pow
 
 ## Infrastructure
 
-The project is designed for deployment on **AWS**, using **EC2** for hosting, **RDS** for PostgreSQL, and **MongoDB Atlas** for NoSQL storage. Proper CORS configuration and environment-based secret management are implemented to ensure secure communication. Scalability and resilience are considered with the use of **AWS services** for high availability.
+The project is designed for deployment on **AWS**, using **EC2** for hosting, **RDS** for PostgreSQL, and **MongoDB Atlas** for NoSQL storage. Proper CORS configuration and environment-based secret management are implemented to ensure secure communication. Scalability and resilience are considered with the use of **AWS**.
 
 ➡️ See detailed documentation in [`/infra/README.md`](./infra/README.md)
 

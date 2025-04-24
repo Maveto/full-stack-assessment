@@ -27,7 +27,7 @@ export default function CartItemCard({
           </div>
         ) : (
           <div className="w-20 h-20 bg-gray-200 dark:bg-zinc-700 flex items-center justify-center text-gray-500 text-sm rounded">
-            Sin imagen
+            No Image
           </div>
         )}
 

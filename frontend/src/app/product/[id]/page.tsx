@@ -38,7 +38,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           ) : (
             <div className="w-full h-[400px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-600">
-              Sin imagen
+              No Image
             </div>
           )}
         </div>

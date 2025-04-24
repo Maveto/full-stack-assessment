@@ -22,12 +22,12 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon-light.ico" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
         <Providers>
           <UserInitializer />
           <Favicon />
           <Header />
-          <main className="min-h-screen px-4 sm:px-8 py-8">{children}</main>
+          <main className="flex-grow px-4 sm:px-8 py-8">{children}</main>
           <Footer />
         </Providers>
       </body>

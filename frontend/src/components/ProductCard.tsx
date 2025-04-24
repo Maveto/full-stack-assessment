@@ -64,7 +64,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           ) : (
             <div className="w-full h-64 bg-gray-200 flex items-center justify-center text-gray-500 dark:bg-zinc-700">
-              Sin imagen
+              No Image
             </div>
           )}
         </Link>

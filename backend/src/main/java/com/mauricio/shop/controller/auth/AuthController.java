@@ -46,10 +46,10 @@ public class AuthController {
 
             ResponseCookie cookie = ResponseCookie.from("token", token)
                     .httpOnly(true)
-                    .secure(secure) //<---- Change in prod to true
+                    .secure(secure)
                     .path("/")
                     .maxAge(Duration.ofDays(7))
-                    .sameSite(sameSite) //<---"None" if frontend and backend are in different domains
+                    .sameSite(sameSite)
                     .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

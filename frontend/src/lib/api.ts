@@ -107,7 +107,21 @@ export async function fetchProductById(id: string) {
   }
 }
 
-export async function deleteProductById(productId: number) {}
+export async function deleteProductById(productId: number) {
+  try {
+    const res = await api.delete(`/products/${productId}`);
+    return res.data;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Delete product by id failed";
+      throw new Error(message);
+    }
+    throw new Error("Unexpected error occurred");
+  }
+}
 
 /////////////////////////// Reviews functions////////////////////////
 export async function fetchReviewsByProductId(id: string) {

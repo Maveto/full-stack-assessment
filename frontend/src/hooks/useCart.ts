@@ -1,4 +1,3 @@
-// hooks/useCart.ts
 import { useEffect, useState } from "react";
 import {
   addItemToCart,
@@ -7,15 +6,19 @@ import {
   updateCartItem,
 } from "@/lib/api";
 import { CartItem } from "@/app/cart/page";
+import { useAuth } from "./useAuth";
 
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
-    loadCart();
-  }, []);
+    if (user) {
+      loadCart();
+    }
+  }, [user]);
 
   const loadCart = async () => {
     try {
@@ -33,11 +36,11 @@ export function useCart() {
   const addToCart = async (productId: number, quantity: number = 1) => {
     try {
       await addItemToCart({ productId, quantity });
-      await loadCart(); // Podrías optimizarlo con lógica optimista si prefieres
+      loadCart();
     } catch (err) {
       console.error("Error adding item to cart:", err);
       setError("Failed to add item to cart");
-      throw err; // Propaga el error si necesitas capturarlo desde el componente
+      throw err;
     }
   };
 
@@ -73,6 +76,6 @@ export function useCart() {
     addToCart,
     removeItem,
     updateQuantity,
-    reloadCart: loadCart, // por si necesitas forzar recarga desde algún lado
+    reloadCart: loadCart,
   };
 }

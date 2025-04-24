@@ -85,3 +85,9 @@ variable "mongo_instace_size" {
   type        = string
   default     = "M0"
 }
+
+variable "admin_key" {
+  description = "Key to create admin users"
+  type        = string
+  sensitive   = true
+}

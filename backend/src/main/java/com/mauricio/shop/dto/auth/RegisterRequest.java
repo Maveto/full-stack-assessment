@@ -5,6 +5,7 @@ public class RegisterRequest {
     private String username;
     private String email;
     private String password;
+    private String adminKey;
 
     public RegisterRequest() {
     }
@@ -31,5 +32,13 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAdminKey() {
+        return adminKey;
+    }
+
+    public void setAdminKey(String adminKey) {
+        this.adminKey = adminKey;
     }
 }

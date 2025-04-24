@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import api from "./axios";
 import { Review } from "@/components/ReviewsList";
+import { Product } from "@/components/ProductCard";
 
 /////////////////////////// User functions////////////////////////
 export async function signUpUser(data: {
@@ -75,6 +76,28 @@ export async function getCurrentUser() {
 }
 
 /////////////////////////// Product functions////////////////////////
+export async function createNewProduct(product: {
+  name: string;
+  description: string;
+  price?: number;
+  stockQuantity?: number;
+  imageUrl?: string;
+}) {
+  try {
+    const res = await api.post("/products", product);
+    return res.data;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Create product failed";
+      throw new Error(message);
+    }
+    throw new Error("Unexpected error occurred");
+  }
+}
+
 export async function fetchProducts() {
   try {
     const res = await api.get("/products");
@@ -101,6 +124,22 @@ export async function fetchProductById(id: string) {
         error.response?.data?.error ||
         error.response?.data?.message ||
         "Fetch product by id failed";
+      throw new Error(message);
+    }
+    throw new Error("Unexpected error occurred");
+  }
+}
+
+export async function updateProductById(productId: number, newData: Product) {
+  try {
+    const res = await api.put(`/products/${productId}`, newData);
+    return res.data;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Update product by id failed";
       throw new Error(message);
     }
     throw new Error("Unexpected error occurred");

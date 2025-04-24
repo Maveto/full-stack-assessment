@@ -9,8 +9,10 @@ interface InputFieldProps {
   label: string;
   type?: string;
   name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string | number;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   required?: boolean;
   error?: string;
 }
@@ -33,18 +35,32 @@ export default function ({
 
   return (
     <div className="relative">
-      <input
-        id={id}
-        type={inputType}
-        name={name}
-        value={value}
-        onChange={onChange}
-        required={required}
-        placeholder=""
-        className={`peer p-2 border rounded w-full ${
-          error ? "border-red-500" : "border-foreground"
-        }`}
-      />
+      {type === "textarea" ? (
+        <textarea
+          id={id}
+          name={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          placeholder=""
+          className={`peer p-2 border rounded w-full ${
+            error ? "border-red-500" : "border-foreground"
+          }`}
+        />
+      ) : (
+        <input
+          id={id}
+          type={inputType}
+          name={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          placeholder=""
+          className={`peer p-2 border rounded w-full ${
+            error ? "border-red-500" : "border-foreground"
+          }`}
+        />
+      )}
       <label
         htmlFor={id}
         className="absolute left-0 -top-6 text-foreground text-sm 

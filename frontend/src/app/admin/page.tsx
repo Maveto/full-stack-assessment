@@ -4,13 +4,30 @@ import { useEffect, useState } from "react";
 import { Product } from "@/components/ProductCard";
 import { fetchProducts, deleteProductById } from "@/lib/api";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import ThemedButton from "@/components/ThemedButton";
+import AdminProductInfo from "@/components/AdminProductInfo";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+
+  const { isInitialized, isAdmin } = useAuth();
+
+  useEffect(() => {
+    if (isInitialized && !isAdmin) {
+      router.replace("/");
+    }
+  }, [isInitialized, isAdmin, router]);
+
+  if (!isInitialized) {
+    return <p className="text-center mt-20">Checking permissions...</p>;
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -37,6 +54,12 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleUpdate = (updatedProduct: Product) => {
+    setProducts((prev) =>
+      prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
+    );
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-foreground">
@@ -61,41 +84,34 @@ export default function AdminDashboard() {
       {loading ? (
         <p className="text-foreground font-bold">Loading...</p>
       ) : (
-        <table className="w-full border border-black text-foreground">
-          <thead className="bg-secondary">
-            <tr>
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Price</th>
-              <th className="p-3 text-left">Stock</th>
-              <th className="p-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((p) => (
-              <tr
-                key={p.id}
-                className="border-t border-black bg-gray-300 text-black"
-              >
-                <td className="p-3">{p.name}</td>
-                <td className="p-3">${p.price.toFixed(2)}</td>
-                <td className="p-3">{p.stockQuantity}</td>
-                <td className="p-3 space-x-2">
-                  <Link href="/" legacyBehavior>
-                    <a className="text-white bg-blue-600 hover:bg-blue-800 p-2 rounded transition duration-300 ease-in-out hover:scale-105">
-                      Edit
-                    </a>
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(p.id)}
-                    className="text-white bg-red-600 hover:bg-red-800 p-2 rounded transition duration-300 ease-in-out hover:scale-105"
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border border-black text-foreground">
+            <thead className="bg-secondary hidden md:table-header-group">
+              <tr>
+                <th className="p-3 text-left">Name</th>
+                <th className="p-3 text-left">Description</th>
+                <th className="p-3 text-left">Price</th>
+                <th className="p-3 text-left">Stock</th>
+                <th className="p-3 text-left">Image URL</th>
+                <th className="p-3 text-left">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {products.map((p) => (
+                <tr
+                  key={p.id}
+                  className="border-t border-black bg-gray-300 text-black block md:table-row mb-4 md:mb-0"
+                >
+                  <AdminProductInfo
+                    product={p}
+                    handleDelete={handleDelete}
+                    handleUpdate={handleUpdate}
+                  />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

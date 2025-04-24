@@ -53,3 +53,10 @@ resource "aws_ssm_parameter" "frontend_url" {
   type  = "String"
   value = var.frontend_url
 }
+
+# Key to create admin users
+resource "aws_ssm_parameter" "admin_key" {
+  name  = "/shop/app/admin_key"
+  type  = "SecureString"
+  value = var.admin_key
+}

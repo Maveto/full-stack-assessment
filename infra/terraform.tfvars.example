@@ -14,3 +14,5 @@ mongodbatlas_org_id      = "TU_ORG_ID"
 
 mongo_user     = "mauricio"
 mongo_password = "supersegura123"
+
+admin_key = "9a11c66f65a31eb5f543264a36d8999fee95c19c9f5466b87f2da58ea445ca8c"

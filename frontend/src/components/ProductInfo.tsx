@@ -55,17 +55,18 @@ export default function ProductInfo({ product }: { product: Product }) {
           {product.stockQuantity > 0 ? "Available" : "Out of Stock"}
         </div>
 
-        <div className="pt-4">
-          <ThemedButton
-            text="Add to Cart"
-            icon={FaShoppingCart}
-            isDisabled={product.stockQuantity <= 0}
-            isPrimary
-            px={5}
-            py={3}
-            onClick={handleAddToCart}
-          />
-        </div>
+        {user && (
+          <div className="pt-4">
+            <ThemedButton
+              text="Add to Cart"
+              icon={FaShoppingCart}
+              isDisabled={product.stockQuantity <= 0}
+              isPrimary
+              padding="md"
+              onClick={handleAddToCart}
+            />
+          </div>
+        )}
       </div>
     </>
   );

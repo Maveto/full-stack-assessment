@@ -28,6 +28,7 @@ JWT_SECRET_KEY=$(aws ssm get-parameter --name "/shop/jwt/secret" --with-decrypti
 JWT_COOKIE_SECURE=$(aws ssm get-parameter --name "/shop/jwt/cookie_secure" --query "Parameter.Value" --output text)
 JWT_COOKIE_SAMESITE=$(aws ssm get-parameter --name "/shop/jwt/cookie_samesite" --query "Parameter.Value" --output text)
 FRONTEND_URL=$(aws ssm get-parameter --name "/shop/frontend/url" --query "Parameter.Value" --output text)
+ADMIN_KEY=$(aws ssm get-parameter --name "/shop/app/admin_key" --with-decryption --query "Parameter.Value" --output text)
 
 echo "Saving environment variables..."
 echo "export POSTGRESQL_URL=${POSTGRESQL_URL}" >> /etc/profile
@@ -38,6 +39,7 @@ echo "export JWT_SECRET_KEY=${JWT_SECRET_KEY}" >> /etc/profile
 echo "export JWT_COOKIE_SECURE=${JWT_COOKIE_SECURE}" >> /etc/profile
 echo "export JWT_COOKIE_SAMESITE=${JWT_COOKIE_SAMESITE}" >> /etc/profile
 echo "export FRONTEND_URL=${FRONTEND_URL}" >> /etc/profile
+echo "export ADMIN_KEY=${ADMIN_KEY}" >> /etc/profile
 
 echo "Creating a systemd service for a Spring Boot app..."
 
@@ -57,6 +59,7 @@ Environment="JWT_SECRET_KEY=${JWT_SECRET_KEY}"
 Environment="JWT_COOKIE_SECURE=${JWT_COOKIE_SECURE}"
 Environment="JWT_COOKIE_SAMESITE=${JWT_COOKIE_SAMESITE}"
 Environment="FRONTEND_URL=${FRONTEND_URL}"
+Environment="ADMIN_KEY=${ADMIN_KEY}"
 Restart=always
 User=ec2-user
 Group=ec2-user

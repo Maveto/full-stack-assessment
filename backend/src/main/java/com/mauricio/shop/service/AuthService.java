@@ -3,6 +3,7 @@ package com.mauricio.shop.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,13 +28,16 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final String adminKeyConfig;
 
     @Autowired
-    public AuthService(UserRepository userRepository, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthService(UserRepository userRepository, AuthenticationManager authenticationManager,
+            PasswordEncoder passwordEncoder, JwtUtil jwtUtil, @Value("${app.admin.key}") String adminKeyConfig) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.adminKeyConfig = adminKeyConfig;
     }
 
     public AuthResponse createUser(RegisterRequest request) {
@@ -62,12 +66,19 @@ public class AuthService {
             throw new RuntimeException("Email already exists!");
         }
 
+        // Check AdminKey
+        Role role = Role.ROLE_USER;
+
+        if (request.getAdminKey() != null && request.getAdminKey().equals(adminKeyConfig)) {
+            role = Role.ROLE_ADMIN;
+        }
+
         // Create a new user
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.ROLE_USER);
+        user.setRole(role);
 
         // Save the user to the database
         userRepository.save(user);

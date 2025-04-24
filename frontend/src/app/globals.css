@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* --background: #f3fafc; */
+  --background: #dedede;
+  --foreground: #091a20;
+  --primary: #1e5367;
+  --secondary: #7d80d9;
+  --accent: #4e39c6;
+}
+
+.dark {
+  --background: #030a0c;
+  /* --background: #1d1e1f; */
+  --foreground: #e0f0f6;
+  --primary: #97cde1;
+  --secondary: #252881;
+  --accent: #513bc6;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* @layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+} */
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-0.5rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

@@ -1,0 +1,18 @@
+# This is just Dummy Data not real variables
+
+ssh_ip = "xxx.xxx.xxx.xxx/32"
+ami_id     = "ami-xxxxxxxxxxxxxxxxx"
+db_username = "admin"
+db_password = "admin123"
+mongo_uri = "mongodb+srv://MongoUsername:MongoPassword@xxxxxxx.xxxxxx.mongodb.net/xxxxxx?retryWrites=true&w=majority&appName=xxxxxx"
+jwt_secret = "MyJWTSecretKey123"
+frontend_url = "https://myFrontendUrl.com"
+
+mongodbatlas_public_key  = "TU_PUBLIC_KEY"
+mongodbatlas_private_key = "TU_PRIVATE_KEY"
+mongodbatlas_org_id      = "TU_ORG_ID"
+
+mongo_user     = "mauricio"
+mongo_password = "supersegura123"
+
+admin_key = "9a11c66f65a31eb5f543264a36d8999fee95c19c9f5466b87f2da58ea445ca8c"

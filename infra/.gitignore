@@ -1,0 +1,45 @@
+# Terraform directories and files
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+.terraform.lock.hcl
+
+# Variable and secrets files
+terraform.tfvars
+terraform.tfvars.json
+*.auto.tfvars
+*.auto.tfvars.json
+
+# AWS credentials and keys
+*.pem
+*.key
+*.crt
+
+# Environment and secret files
+.env
+.env.*
+
+# MongoDB Atlas or SSM params
+*.secrets.tf
+
+# Backup files
+*.bak
+*.backup
+
+# IDE/editor configs
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Archive files
+*.zip
+*.tar.gz

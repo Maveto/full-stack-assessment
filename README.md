@@ -1,4 +1,4 @@
-# Full Stack Assessment 
+# Full Stack Assessment
 
 This project is a fullstack online store application built with modern technologies across backend and frontend. It includes JWT-based authentication, dual database integration, cloud deployment (AWS), and a fully responsive design.
 
